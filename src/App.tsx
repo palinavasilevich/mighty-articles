@@ -1,4 +1,4 @@
-import { GenerateSentenceCard } from "./components/generate-sentence-card";
+import { ArticleQuizCard } from "./components/article-quiz-card";
 import { Header } from "./components/header";
 
 export function App() {
@@ -9,7 +9,7 @@ export function App() {
         <h1 className="text-3xl font-bold mb-6 text-gray-900 text-center">
           Mighty Articles — Learn German Articles
         </h1>
-        <GenerateSentenceCard />
+        <ArticleQuizCard />
       </main>
     </div>
   );
