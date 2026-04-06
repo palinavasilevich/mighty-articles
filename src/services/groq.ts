@@ -1,10 +1,10 @@
 import { API_KEY, GROQ_API_URL, GROQ_MODEL } from "../shared/constants/config";
-import { buildPrompt, type SentenceLength } from "../shared/constants/prompts";
+import { buildPrompt } from "../shared/constants/prompts";
+import type { SentenceLength } from "../shared/constants/sentence-length-options";
 
 export interface SentenceData {
   sentence: string;
   articles: string[];
-  maskedSentence: string;
 }
 
 export async function fetchSentence(
@@ -72,11 +72,5 @@ export async function fetchSentence(
     a.toLowerCase().trim(),
   );
 
-  const articlePattern = new RegExp(
-    `\\b(${normalizedArticles.join("|")})\\b`,
-    "gi",
-  );
-  const maskedSentence = sentence.replace(articlePattern, "__ARTICLE__");
-
-  return { sentence, articles: normalizedArticles, maskedSentence };
+  return { sentence, articles: normalizedArticles };
 }

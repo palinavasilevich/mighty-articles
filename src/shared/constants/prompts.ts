@@ -1,6 +1,5 @@
 import { ARTICLES } from "./articles";
-
-export type SentenceLength = "short" | "medium" | "long";
+import type { SentenceLength } from "./sentence-length-options";
 
 const LENGTH_INSTRUCTIONS: Record<SentenceLength, string> = {
   short: "The sentence should be short (around 5 words).",

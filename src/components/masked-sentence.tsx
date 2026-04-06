@@ -1,8 +1,8 @@
-import type { SentenceData } from "../services/groq";
+import type { EnrichedSentenceData } from "../hooks/use-generate-sentence";
 import { getArticleHint } from "../utils/getArticleHint";
 
 type MaskedSentenceProps = {
-  sentenceData: SentenceData;
+  sentenceData: EnrichedSentenceData;
 };
 export function MaskedSentence({ sentenceData }: MaskedSentenceProps) {
   const { articles, maskedSentence } = sentenceData;
@@ -14,9 +14,7 @@ export function MaskedSentence({ sentenceData }: MaskedSentenceProps) {
       {parts.map((part, i) => (
         <span key={`${i}-${articles[i] ?? ""}`}>
           {part}
-          {i < articles.length && (
-            <span>{getArticleHint({ article: articles[i], position: i })}</span>
-          )}
+          {i < articles.length && <span>{getArticleHint(articles[i])}</span>}
         </span>
       ))}
     </p>
