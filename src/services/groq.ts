@@ -1,18 +1,15 @@
-import { API_KEY, GROQ_API_URL, GROQ_MODEL } from "./config";
-import { PROMPT } from "./prompts";
-
-/**
- * Fetch a new German sentence from the Groq API.
- * @returns {Promise<{ sentence: string, article: string, maskedSentence: string }>}
- */
+import { API_KEY, GROQ_API_URL, GROQ_MODEL } from "../shared/constants/config";
+import { buildPrompt, type SentenceLength } from "../shared/constants/prompts";
 
 export interface SentenceData {
   sentence: string;
-  article: string;
+  articles: string[];
   maskedSentence: string;
 }
 
-export async function generateSentence(): Promise<SentenceData> {
+export async function fetchSentence(
+  length: SentenceLength,
+): Promise<SentenceData> {
   if (!API_KEY) {
     throw new Error(
       "Missing VITE_GROQ_API_KEY. Please add it to your .env file.",
@@ -27,7 +24,7 @@ export async function generateSentence(): Promise<SentenceData> {
     },
     body: JSON.stringify({
       model: GROQ_MODEL,
-      messages: [{ role: "user", content: PROMPT }],
+      messages: [{ role: "user", content: buildPrompt(length) }],
       temperature: 0.9,
       max_tokens: 256,
     }),
@@ -63,13 +60,23 @@ export async function generateSentence(): Promise<SentenceData> {
     );
   }
 
-  const { sentence, article, maskedSentence } = parsed;
+  const { sentence, articles } = parsed;
 
-  if (!sentence || !article || !maskedSentence) {
+  if (!sentence || !Array.isArray(articles) || articles.length === 0) {
     throw new Error(
-      "API response is missing required fields (sentence, article, maskedSentence).",
+      "API response is missing required fields (sentence, articles).",
     );
   }
 
-  return { sentence, article: article.toLowerCase().trim(), maskedSentence };
+  const normalizedArticles: string[] = articles.map((a: string) =>
+    a.toLowerCase().trim(),
+  );
+
+  const articlePattern = new RegExp(
+    `\\b(${normalizedArticles.join("|")})\\b`,
+    "gi",
+  );
+  const maskedSentence = sentence.replace(articlePattern, "__ARTICLE__");
+
+  return { sentence, articles: normalizedArticles, maskedSentence };
 }
