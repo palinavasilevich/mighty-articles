@@ -99,7 +99,7 @@ export function ArticleQuizCard() {
       </div>
 
       {sentenceData && (
-        <div className="pt-5 border-t text-center flex flex-col gap-4 items-center">
+        <div className="pt-5 border-t flex flex-col gap-4 items-center">
           <MaskedSentence
             sentenceData={sentenceData}
             status={status}

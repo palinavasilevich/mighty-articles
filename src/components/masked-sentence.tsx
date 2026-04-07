@@ -1,3 +1,5 @@
+import React from "react";
+
 import type {
   MaskedSentenceData,
   Status,
@@ -22,9 +24,9 @@ export function MaskedSentence({
   const parts = maskedSentence.split("__ARTICLE__");
 
   return (
-    <p className="text-lg text-center leading-loose">
+    <p className="text-lg leading-loose">
       {parts.map((part, i) => (
-        <span key={`${i}-${articles[i] ?? ""}`} className="inline-block mb-2">
+        <React.Fragment key={`${i}-${articles[i] ?? ""}`}>
           {part}
           {i < articles.length && (
             <>
@@ -34,7 +36,7 @@ export function MaskedSentence({
                   value={userGuesses[i] ?? ""}
                   onChange={(e) => onGuessChange(i, e.target.value)}
                   placeholder={getArticleHint(articles[i])}
-                  className="mx-1 w-20 border-b-2 border-blue-500 bg-blue-50 rounded px-1 py-0.5 text-blue-800 font-medium focus:outline-none focus:border-blue-700"
+                  className="mb-2 mx-1 w-20 border-b-2 border-blue-500 bg-blue-50 rounded px-1 py-0.5 text-blue-800 font-medium focus:outline-none focus:border-blue-700"
                 />
               )}
               {status === "checked" && (
@@ -53,7 +55,7 @@ export function MaskedSentence({
               )}
             </>
           )}
-        </span>
+        </React.Fragment>
       ))}
     </p>
   );
