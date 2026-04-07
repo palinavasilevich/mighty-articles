@@ -6,20 +6,24 @@ type ResultBoardProps = {
 
 export function ResultBoard({ score, total, onReset }: ResultBoardProps) {
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col items-center gap-3">
       {score === total ? (
-        <p className="text-2xl font-bold text-green-600">
-          Super gemacht! {score} / {total}
-        </p>
+        <div className="text-2xl font-bold flex flex-col items-center gap-1">
+          <span>🎉 Gut gemacht!</span>
+          <span className="text-green-600">
+            {score} / {total}
+          </span>
+        </div>
       ) : (
         <>
-          <p className="text-lg font-semibold text-gray-700">
+          <p className="text-lg font-semibold text-gray-700 text-center">
             Score:{" "}
             <span className="text-orange-500">
               {score} / {total}
             </span>
           </p>
           <button
+            type="button"
             onClick={onReset}
             className="px-5 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 active:bg-gray-300 transition-colors cursor-pointer"
           >

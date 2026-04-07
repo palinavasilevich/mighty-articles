@@ -27,7 +27,7 @@ export function ArticleQuizCard() {
     userGuesses.length > 0 && userGuesses.every((g) => g !== "");
 
   return (
-    <div className="bg-white rounded-2xl shadow p-6 space-y-4">
+    <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 space-y-4">
       <div className="flex flex-col gap-4 items-center">
         <p className="text-center text-gray-600">
           Click the button below to generate a German sentence. <br /> Figure
@@ -76,6 +76,7 @@ export function ArticleQuizCard() {
 
           {status === "playing" && (
             <button
+              type="button"
               onClick={checkAnswers}
               disabled={!allFilled}
               className="px-5 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 active:bg-green-800 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"

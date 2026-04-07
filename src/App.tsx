@@ -3,7 +3,7 @@ import { Header } from "./components/header";
 
 export function App() {
   return (
-    <div className="flex flex-col items-center min-h-screen">
+    <div className="flex flex-col items-center min-h-screen bg-gray-50">
       <Header />
       <main className="w-full max-w-2xl mx-auto px-4 py-12">
         <h1 className="text-2xl font-bold mb-6 text-gray-900 text-center">
