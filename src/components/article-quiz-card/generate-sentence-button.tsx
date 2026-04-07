@@ -2,11 +2,13 @@ import type { Status } from "../../hooks/use-generate-sentence";
 
 type GenerateSentenceButtonProps = {
   status: Status;
+  className?: string;
   onGenerate: () => void;
 };
 
 export function GenerateSentenceButton({
   status,
+  className,
   onGenerate,
 }: GenerateSentenceButtonProps) {
   return (
@@ -14,7 +16,8 @@ export function GenerateSentenceButton({
       type="button"
       onClick={onGenerate}
       disabled={status === "loading"}
-      className="flex items-center gap-2 px-5 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 active:bg-blue-800 transition-colors cursor-pointer disabled:bg-blue-500"
+      className={`flex items-center gap-2 px-5 py-2 bg-blue-600 text-white font-medium rounded-lg
+         hover:bg-blue-700 active:bg-blue-800 transition-colors cursor-pointer disabled:bg-blue-500 ${className}`}
     >
       {status === "loading" && (
         <svg

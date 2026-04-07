@@ -16,7 +16,7 @@ export function ResultBoard({ score, total, onReset }: ResultBoardProps) {
         </div>
       ) : (
         <>
-          <p className="text-lg font-semibold text-gray-700 text-center">
+          <p className="text-lg font-semibold text-gray-700 dark:text-gray-300 text-center">
             Score:{" "}
             <span className="text-orange-500">
               {score} / {total}
@@ -25,7 +25,7 @@ export function ResultBoard({ score, total, onReset }: ResultBoardProps) {
           <button
             type="button"
             onClick={onReset}
-            className="px-5 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 active:bg-gray-300 transition-colors cursor-pointer"
+            className="px-5 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 active:bg-gray-300 dark:active:bg-gray-500 transition-colors cursor-pointer"
           >
             Try again
           </button>

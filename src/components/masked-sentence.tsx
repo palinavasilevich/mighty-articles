@@ -24,7 +24,7 @@ export function MaskedSentence({
   const parts = maskedSentence.split("__ARTICLE__");
 
   return (
-    <p className="text-lg leading-loose">
+    <p className="text-lg leading-loose dark:text-gray-100">
       {parts.map((part, i) => (
         <React.Fragment key={`${i}-${articles[i] ?? ""}`}>
           {part}
@@ -36,20 +36,20 @@ export function MaskedSentence({
                   value={userGuesses[i] ?? ""}
                   onChange={(e) => onGuessChange(i, e.target.value)}
                   placeholder={getArticleHint(articles[i])}
-                  className="mb-2 mx-1 w-20 border-b-2 border-blue-500 bg-blue-50 rounded px-1 py-0.5 text-blue-800 font-medium focus:outline-none focus:border-blue-700"
+                  className="mb-2 mx-1 w-20 border-b-2 border-blue-500 bg-blue-50 dark:bg-blue-900/30 rounded px-1 py-0.5 text-blue-800 dark:text-blue-300 font-medium focus:outline-none focus:border-blue-700"
                 />
               )}
               {status === "checked" && (
                 <span
                   className={`mx-1 px-1.5 py-0.5 rounded font-semibold ${
                     isCorrectArticle(userGuesses[i], articles[i])
-                      ? "bg-green-100 text-green-800"
-                      : "bg-red-100 text-red-800"
+                      ? "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400"
+                      : "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400"
                   }`}
                 >
                   {userGuesses[i] || "—"}
                   {!isCorrectArticle(userGuesses[i], articles[i]) && (
-                    <span className="ml-1 text-green-700">({articles[i]})</span>
+                    <span className="ml-1 text-green-700 dark:text-green-500">({articles[i]})</span>
                   )}
                 </span>
               )}
