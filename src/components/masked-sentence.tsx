@@ -36,7 +36,7 @@ export function MaskedSentence({
                   value={userGuesses[i] ?? ""}
                   onChange={(e) => onGuessChange(i, e.target.value)}
                   placeholder={getArticleHint(articles[i])}
-                  className="mb-2 mx-1 w-20 border-b-2 border-blue-500 bg-blue-50 dark:bg-blue-900/30 rounded px-1 py-0.5 text-blue-800 dark:text-blue-300 font-medium focus:outline-none focus:border-blue-700"
+                  className="mx-1 w-20 border-b-2 border-blue-500 bg-blue-50 dark:bg-blue-900/30 rounded px-1 py-0.5 text-blue-800 dark:text-blue-300 font-medium focus:outline-none focus:border-blue-700"
                 />
               )}
               {status === "checked" && (

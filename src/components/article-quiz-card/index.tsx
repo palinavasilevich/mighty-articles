@@ -59,7 +59,6 @@ export function ArticleQuizCard() {
           <GenerateSentenceButton
             status={status}
             onGenerate={generateSentence}
-            className="m-auto"
           />
         </div>
 
@@ -71,8 +70,7 @@ export function ArticleQuizCard() {
       </div>
       {sentenceData && (
         <div className="mt-4 bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 p-6 space-y-4">
-          {sentenceData && (
-            <div className="pt-5 dark:border-gray-700 flex flex-col gap-4 items-center">
+          <div className="flex flex-col gap-4 items-center">
               <MaskedSentence
                 sentenceData={sentenceData}
                 status={status}
@@ -98,8 +96,7 @@ export function ArticleQuizCard() {
                   onReset={resetGuesses}
                 />
               )}
-            </div>
-          )}
+          </div>
         </div>
       )}
     </>
