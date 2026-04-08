@@ -9,6 +9,41 @@ export function GenerateSentenceButton({
   status,
   onGenerate,
 }: GenerateSentenceButtonProps) {
+  const getTextButton = () => {
+    if (status === "loading") {
+      return (
+        <>
+          <svg
+            className="animate-spin h-4 w-4 text-white"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+            />
+          </svg>
+          "Generating...";
+        </>
+      );
+    }
+
+    if (status === "playing" || status === "checked") {
+      return "Generate new sentence";
+    }
+
+    return "Generate sentence";
+  };
   return (
     <button
       type="button"
@@ -16,32 +51,7 @@ export function GenerateSentenceButton({
       disabled={status === "loading"}
       className="flex items-center gap-2 px-5 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 active:bg-blue-800 transition-colors cursor-pointer disabled:bg-blue-500 disabled:cursor-not-allowed"
     >
-      {status === "loading" && (
-        <svg
-          className="animate-spin h-4 w-4 text-white"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          />
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-          />
-        </svg>
-      )}
-      {status === "idle" && "Generate sentence"}
-      {status === "loading" && "Generating..."}
-      {(status === "playing" || status === "checked") &&
-        "Generate new sentence"}
+      {getTextButton()}
     </button>
   );
 }

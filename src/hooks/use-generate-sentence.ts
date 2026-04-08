@@ -7,32 +7,53 @@ export type Status = "idle" | "loading" | "playing" | "checked" | "error";
 
 export type MaskedSentenceData = SentenceData & { maskedSentence: string };
 
+function escapeRegex(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function buildMaskedSentence(
   sentence: string,
   articles: string[],
 ): { maskedSentence: string; sortedArticles: string[] } {
-  const sortedArticles = [...articles].sort((a, b) => {
-    const posA = sentence.search(new RegExp(`\\b${a}\\b`, "i"));
-    const posB = sentence.search(new RegExp(`\\b${b}\\b`, "i"));
-    return posA - posB;
-  });
+  // Find each article's position by scanning left-to-right through the sentence.
+  // This correctly handles duplicate articles and avoids stale positions from
+  // searching the full string for every article independently.
+  const found: { index: number; matchedText: string; article: string }[] = [];
+  let searchFrom = 0;
 
-  let remaining = sentence;
-  let masked = "";
+  for (const article of articles) {
+    const pattern = new RegExp(`\\b${escapeRegex(article)}\\b`, "i");
+    const match = pattern.exec(sentence.slice(searchFrom));
 
-  for (const article of sortedArticles) {
-    const pattern = new RegExp(`\\b${article}\\b`, "i");
-    const match = pattern.exec(remaining);
     if (!match) {
       throw new Error(
-        `Sentence masking mismatch: could not find article "${article}" in the remaining sentence. The model response may be inconsistent.`,
+        `Masking error: could not find "${article}" in sentence.`,
       );
     }
-    masked += remaining.slice(0, match.index) + "__ARTICLE__";
-    remaining = remaining.slice(match.index + match[0].length);
+
+    found.push({
+      index: searchFrom + match.index,
+      matchedText: match[0],
+      article,
+    });
+    searchFrom = searchFrom + match.index + match[0].length;
   }
 
-  return { maskedSentence: masked + remaining, sortedArticles };
+  // Sort by position in case the LLM returned articles out of order.
+  found.sort((a, b) => a.index - b.index);
+
+  let masked = "";
+  let cursor = 0;
+
+  for (const { index, matchedText } of found) {
+    masked += sentence.slice(cursor, index) + "__ARTICLE__";
+    cursor = index + matchedText.length;
+  }
+
+  return {
+    maskedSentence: masked + sentence.slice(cursor),
+    sortedArticles: found.map((f) => f.article),
+  };
 }
 
 export function useGenerateSentence() {
@@ -60,18 +81,23 @@ export function useGenerateSentence() {
 
     try {
       const data = await fetchSentence(sentenceLength);
+
       const { maskedSentence, sortedArticles } = buildMaskedSentence(
         data.sentence,
         data.articles,
       );
-      setSentenceData({ ...data, articles: sortedArticles, maskedSentence });
-      setUserGuesses(new Array(sortedArticles.length).fill(""));
+
+      setSentenceData({
+        ...data,
+        articles: sortedArticles,
+        maskedSentence,
+      });
+
+      setUserGuesses(Array.from({ length: sortedArticles.length }, () => ""));
 
       setStatus("playing");
     } catch (error) {
-      setErrorMsg(
-        error instanceof Error ? error.message : "An unknown error occurred.",
-      );
+      setErrorMsg(error instanceof Error ? error.message : "Unknown error");
       setStatus("error");
     }
   };
