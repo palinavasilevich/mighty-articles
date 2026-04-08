@@ -30,8 +30,8 @@ export function ArticleQuizCard() {
     <>
       <div className="flex flex-col gap-4 items-center">
         <p className="text-gray-600 dark:text-gray-400">
-          Select the sentence length and click the button to generate a German
-          sentence.
+          Select the length and click the button to generate a German sentence
+          or question.
         </p>
 
         <div className="flex items-center justify-between gap-3">

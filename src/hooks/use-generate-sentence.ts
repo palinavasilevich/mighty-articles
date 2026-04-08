@@ -11,35 +11,62 @@ function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+const DECLENSIONS: Record<string, string[]> = {
+  ein: ["einen", "einem", "einer", "eines"],
+  kein: ["keinen", "keinem", "keiner", "keines"],
+  eine: ["einen", "einem", "einer"],
+  keine: ["keinen", "keinem", "keiner"],
+};
+
+function findArticleMatch(
+  slice: string,
+  article: string,
+): RegExpExecArray | null {
+  const exact = new RegExp(`\\b${escapeRegex(article)}\\b`, "i");
+  const match = exact.exec(slice);
+  if (match) return match;
+
+  for (const alt of DECLENSIONS[article] ?? []) {
+    const altMatch = new RegExp(`\\b${escapeRegex(alt)}\\b`, "i").exec(slice);
+    if (altMatch) return altMatch;
+  }
+
+  return null;
+}
+
 function buildMaskedSentence(
   sentence: string,
   articles: string[],
 ): { maskedSentence: string; sortedArticles: string[] } {
-  // Find each article's position by scanning left-to-right through the sentence.
-  // This correctly handles duplicate articles and avoids stale positions from
-  // searching the full string for every article independently.
   const found: { index: number; matchedText: string; article: string }[] = [];
-  let searchFrom = 0;
+  const usedRanges: [number, number][] = [];
 
   for (const article of articles) {
-    const pattern = new RegExp(`\\b${escapeRegex(article)}\\b`, "i");
-    const match = pattern.exec(sentence.slice(searchFrom));
+    let searchFrom = 0;
+    let resolved: { index: number; matchedText: string } | null = null;
 
-    if (!match) {
+    while (searchFrom <= sentence.length) {
+      const match = findArticleMatch(sentence.slice(searchFrom), article);
+      if (!match) break;
+      const start = searchFrom + match.index;
+      const end = start + match[0].length;
+      const overlaps = usedRanges.some(([s, e]) => start < e && end > s);
+      if (!overlaps) {
+        resolved = { index: start, matchedText: match[0] };
+        usedRanges.push([start, end]);
+        break;
+      }
+      searchFrom = start + 1;
+    }
+
+    if (!resolved) {
       throw new Error(
         `Masking error: could not find "${article}" in sentence.`,
       );
     }
 
-    found.push({
-      index: searchFrom + match.index,
-      matchedText: match[0],
-      article,
-    });
-    searchFrom = searchFrom + match.index + match[0].length;
+    found.push({ index: resolved.index, matchedText: resolved.matchedText, article });
   }
-
-  // Sort by position in case the LLM returned articles out of order.
   found.sort((a, b) => a.index - b.index);
 
   let masked = "";
@@ -52,7 +79,7 @@ function buildMaskedSentence(
 
   return {
     maskedSentence: masked + sentence.slice(cursor),
-    sortedArticles: found.map((f) => f.article),
+    sortedArticles: found.map((f) => f.matchedText.toLowerCase()),
   };
 }
 
@@ -111,7 +138,9 @@ export function useGenerateSentence() {
   };
 
   const resetGuesses = () => {
-    setUserGuesses(new Array(userGuesses.length).fill(""));
+    setUserGuesses(
+      Array.from({ length: sentenceData!.articles.length }, () => ""),
+    );
     setStatus("playing");
   };
 
