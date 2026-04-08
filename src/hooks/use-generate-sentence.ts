@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { fetchSentence, type SentenceData } from "../services/groq";
-import type { SentenceLength } from "../shared/constants/sentence-length-options";
+import type { SentenceLength } from "../constants/sentence-length-options";
 import { isCorrectArticle } from "../utils/isCorrectArticle";
 
 export type Status = "idle" | "loading" | "playing" | "checked" | "error";

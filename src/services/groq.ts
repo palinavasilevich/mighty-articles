@@ -1,6 +1,6 @@
-import { API_KEY, GROQ_API_URL, GROQ_MODEL } from "../shared/constants/config";
-import { buildPrompt } from "../shared/constants/prompts";
-import type { SentenceLength } from "../shared/constants/sentence-length-options";
+import { API_KEY, GROQ_API_URL, GROQ_MODEL } from "../constants/config";
+import { buildPrompt } from "../constants/prompts";
+import type { SentenceLength } from "../constants/sentence-length-options";
 
 export interface SentenceData {
   sentence: string;

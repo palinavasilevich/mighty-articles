@@ -2,7 +2,7 @@ import { useGenerateSentence } from "../../hooks/use-generate-sentence";
 import {
   LENGTH_OPTIONS,
   type SentenceLength,
-} from "../../shared/constants/sentence-length-options";
+} from "../../constants/sentence-length-options";
 import { MaskedSentence } from "../masked-sentence";
 
 import { ResultBoard } from "./result-board";
@@ -71,31 +71,31 @@ export function ArticleQuizCard() {
       {sentenceData && (
         <div className="mt-4 bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 p-6 space-y-4">
           <div className="flex flex-col gap-4 items-center">
-              <MaskedSentence
-                sentenceData={sentenceData}
-                status={status}
-                userGuesses={userGuesses}
-                onGuessChange={setGuess}
+            <MaskedSentence
+              sentenceData={sentenceData}
+              status={status}
+              userGuesses={userGuesses}
+              onGuessChange={setGuess}
+            />
+
+            {status === "playing" && (
+              <button
+                type="button"
+                onClick={checkAnswers}
+                disabled={!allFilled}
+                className="px-5 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 active:bg-green-800 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Check answers
+              </button>
+            )}
+
+            {status === "checked" && score !== null && (
+              <ResultBoard
+                score={score}
+                total={userGuesses.length}
+                onReset={resetGuesses}
               />
-
-              {status === "playing" && (
-                <button
-                  type="button"
-                  onClick={checkAnswers}
-                  disabled={!allFilled}
-                  className="px-5 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 active:bg-green-800 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  Check answers
-                </button>
-              )}
-
-              {status === "checked" && score !== null && (
-                <ResultBoard
-                  score={score}
-                  total={userGuesses.length}
-                  onReset={resetGuesses}
-                />
-              )}
+            )}
           </div>
         </div>
       )}
