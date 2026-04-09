@@ -86,19 +86,21 @@ function buildMaskedSentence(
   };
 }
 
-export function useGenerateSentence() {
+export function useGenerateSentence(
+  mode: SentenceMode,
+  setMode: (newMode: SentenceMode) => void,
+) {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [sentenceData, setSentenceData] = useState<MaskedSentenceData | null>(
     null,
   );
-  const [mode, setModeState] = useState<SentenceMode>("ai");
   const [sentenceLength, setSentenceLength] =
     useState<SentenceLength>("medium");
   const [userGuesses, setUserGuesses] = useState<string[]>([]);
 
-  const setMode = (newMode: SentenceMode) => {
-    setModeState(newMode);
+  const handleSetMode = (newMode: SentenceMode) => {
+    setMode(newMode);
     setSentenceData(null);
     setUserGuesses([]);
     setStatus("idle");
@@ -164,7 +166,7 @@ export function useGenerateSentence() {
     errorMsg,
     sentenceData,
     mode,
-    setMode,
+    setMode: handleSetMode,
     sentenceLength,
     setSentenceLength,
     generateSentence,

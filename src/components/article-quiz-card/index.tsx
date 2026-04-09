@@ -2,6 +2,11 @@ import {
   useGenerateSentence,
   type SentenceMode,
 } from "../../hooks/use-generate-sentence";
+
+type ArticleQuizCardProps = {
+  mode: SentenceMode;
+  setMode: (mode: SentenceMode) => void;
+};
 import {
   LENGTH_OPTIONS,
   type SentenceLength,
@@ -16,13 +21,11 @@ const MODES: { value: SentenceMode; label: string }[] = [
   { value: "book", label: "Harry Potter" },
 ];
 
-export function ArticleQuizCard() {
+export function ArticleQuizCard({ mode, setMode }: ArticleQuizCardProps) {
   const {
     sentenceData,
     status,
     errorMsg,
-    mode,
-    setMode,
     sentenceLength,
     setSentenceLength,
     generateSentence,
@@ -31,7 +34,7 @@ export function ArticleQuizCard() {
     setGuess,
     checkAnswers,
     resetGuesses,
-  } = useGenerateSentence();
+  } = useGenerateSentence(mode, setMode);
 
   const allFilled =
     userGuesses.length > 0 && userGuesses.every((g) => g !== "");
