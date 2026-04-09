@@ -1,4 +1,7 @@
-import { useGenerateSentence } from "../../hooks/use-generate-sentence";
+import {
+  useGenerateSentence,
+  type SentenceMode,
+} from "../../hooks/use-generate-sentence";
 import {
   LENGTH_OPTIONS,
   type SentenceLength,
@@ -8,11 +11,18 @@ import { MaskedSentence } from "../masked-sentence";
 import { ResultBoard } from "./result-board";
 import { GenerateSentenceButton } from "./generate-sentence-button";
 
+const MODES: { value: SentenceMode; label: string }[] = [
+  { value: "ai", label: "AI Generated" },
+  { value: "book", label: "Harry Potter" },
+];
+
 export function ArticleQuizCard() {
   const {
     sentenceData,
     status,
     errorMsg,
+    mode,
+    setMode,
     sentenceLength,
     setSentenceLength,
     generateSentence,
@@ -29,32 +39,54 @@ export function ArticleQuizCard() {
   return (
     <>
       <div className="flex flex-col gap-4 items-center">
+        <div className="flex rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden">
+          {MODES.map(({ value, label }) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setMode(value)}
+              className={`px-4 py-2 text-sm font-medium transition-colors cursor-pointer ${
+                mode === value
+                  ? "bg-blue-600 text-white"
+                  : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
         <p className="text-gray-600 dark:text-gray-400">
-          Select the length and click the button to generate a German sentence
-          or question.
+          {mode === "ai"
+            ? "Select the length and click the button to generate a German sentence or question."
+            : "Click the button to get a random sentence from Harry Potter."}
         </p>
 
         <div className="flex items-center justify-between gap-3">
-          <label
-            htmlFor="length"
-            className="text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
-            Sentence Length:
-          </label>
-          <select
-            id="length"
-            value={sentenceLength}
-            onChange={(e) =>
-              setSentenceLength(e.target.value as SentenceLength)
-            }
-            className="text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-200"
-          >
-            {LENGTH_OPTIONS.map(({ value, label }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
+          {mode === "ai" && (
+            <>
+              <label
+                htmlFor="length"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
+                Sentence Length:
+              </label>
+              <select
+                id="length"
+                value={sentenceLength}
+                onChange={(e) =>
+                  setSentenceLength(e.target.value as SentenceLength)
+                }
+                className="text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-200"
+              >
+                {LENGTH_OPTIONS.map(({ value, label }) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
 
           <GenerateSentenceButton
             status={status}

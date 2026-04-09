@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { fetchSentence, type SentenceData } from "../services/groq";
+import { getRandomBookSentence } from "../services/book";
 import type { SentenceLength } from "../constants/sentence-length-options";
 import { isCorrectArticle } from "../utils/isCorrectArticle";
+
+export type SentenceMode = "ai" | "book";
 
 export type Status = "idle" | "loading" | "playing" | "checked" | "error";
 
@@ -89,9 +92,18 @@ export function useGenerateSentence() {
   const [sentenceData, setSentenceData] = useState<MaskedSentenceData | null>(
     null,
   );
+  const [mode, setModeState] = useState<SentenceMode>("ai");
   const [sentenceLength, setSentenceLength] =
     useState<SentenceLength>("medium");
   const [userGuesses, setUserGuesses] = useState<string[]>([]);
+
+  const setMode = (newMode: SentenceMode) => {
+    setModeState(newMode);
+    setSentenceData(null);
+    setUserGuesses([]);
+    setStatus("idle");
+    setErrorMsg("");
+  };
 
   const score =
     status === "checked" && sentenceData
@@ -107,7 +119,10 @@ export function useGenerateSentence() {
     setUserGuesses([]);
 
     try {
-      const data = await fetchSentence(sentenceLength);
+      const data =
+        mode === "book"
+          ? getRandomBookSentence()
+          : await fetchSentence(sentenceLength);
 
       const { maskedSentence, sortedArticles } = buildMaskedSentence(
         data.sentence,
@@ -148,6 +163,8 @@ export function useGenerateSentence() {
     status,
     errorMsg,
     sentenceData,
+    mode,
+    setMode,
     sentenceLength,
     setSentenceLength,
     generateSentence,
