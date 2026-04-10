@@ -1,11 +1,8 @@
 import React, { useEffect, useRef, useCallback } from "react";
 
-import type {
-  MaskedSentenceData,
-  Status,
-} from "../../hooks/use-generate-sentence";
 import { ArticleInput } from "./article-input";
 import { ArticleResult } from "./article-result";
+import type { MaskedSentenceData, Status } from "../../store/sentence/types";
 
 type MaskedSentenceProps = {
   sentenceData: MaskedSentenceData;
