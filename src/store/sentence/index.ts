@@ -80,6 +80,8 @@ export const useSentenceStore = create<
         ...initialState,
         status: "error",
         errorMsg: error instanceof Error ? error.message : "Unknown error",
+        mode: get().mode,
+        sentenceLength: get().sentenceLength,
       });
     }
   },

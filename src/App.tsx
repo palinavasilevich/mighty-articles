@@ -1,12 +1,11 @@
-import { useState } from "react";
 import { ArticleQuizCard } from "./components/article-quiz-card";
 import { Header } from "./components/layout/header";
 import { useDarkMode } from "./hooks/use-dark-mode";
-import type { SentenceMode } from "./store/sentence/types";
+import { useSentenceStore } from "./store/sentence";
 
 export function App() {
   const { isDark, toggle } = useDarkMode();
-  const [mode, setMode] = useState<SentenceMode>("ai");
+  const mode = useSentenceStore((s) => s.mode);
 
   return (
     <div
@@ -18,7 +17,7 @@ export function App() {
           Learn German articles and become a master of sword, magic, and the
           German language!
         </h1>
-        <ArticleQuizCard mode={mode} setMode={setMode} />
+        <ArticleQuizCard />
       </main>
     </div>
   );

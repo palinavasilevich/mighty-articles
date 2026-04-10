@@ -47,7 +47,6 @@ export function MaskedSentence({
             <>
               {status === "playing" && (
                 <ArticleInput
-                  index={i}
                   value={userGuesses[i] ?? ""}
                   placeholder={articles[i][0]}
                   onChange={(val) => onGuessChange(i, val)}

@@ -7,7 +7,6 @@ export const ArticleInput = ({
   onEnter,
   inputRef,
 }: {
-  index: number;
   value: string;
   placeholder: string;
   onChange: (val: string) => void;

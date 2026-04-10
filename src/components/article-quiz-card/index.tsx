@@ -8,15 +8,9 @@ import { GenerateSentenceButton } from "./generate-sentence-button";
 import { MaskedSentence } from "../masked-sentence";
 
 import { useSentenceStore } from "../../store/sentence";
-import type { SentenceMode } from "../../store/sentence/types";
 import { MODES } from "../../constants/sentence-modes";
 
-type ArticleQuizCardProps = {
-  mode: SentenceMode;
-  setMode: (mode: SentenceMode) => void;
-};
-
-export function ArticleQuizCard({ mode, setMode }: ArticleQuizCardProps) {
+export function ArticleQuizCard() {
   const {
     status,
     score,
@@ -24,11 +18,13 @@ export function ArticleQuizCard({ mode, setMode }: ArticleQuizCardProps) {
     sentenceData,
     userGuesses,
     sentenceLength,
+    mode,
     generateSentence,
     setSentenceLength,
     setGuess,
     checkAnswers,
     resetGuesses,
+    setMode,
   } = useSentenceStore();
 
   const allFilled =
