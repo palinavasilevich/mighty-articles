@@ -1,7 +1,3 @@
-type ArticleQuizCardProps = {
-  mode: SentenceMode;
-  setMode: (mode: SentenceMode) => void;
-};
 import {
   LENGTH_OPTIONS,
   type SentenceLength,
@@ -10,30 +6,30 @@ import {
 import { ResultBoard } from "./result-board";
 import { GenerateSentenceButton } from "./generate-sentence-button";
 import { MaskedSentence } from "../masked-sentence";
-import {
-  useGenerateSentence,
-  type SentenceMode,
-} from "../../hooks/use-generate-sentence";
 
-const MODES: { value: SentenceMode; label: string }[] = [
-  { value: "ai", label: "AI Generated" },
-  { value: "book", label: "Harry Potter" },
-];
+import { useSentenceStore } from "../../store/sentence";
+import type { SentenceMode } from "../../store/sentence/types";
+import { MODES } from "../../constants/sentence-modes";
+
+type ArticleQuizCardProps = {
+  mode: SentenceMode;
+  setMode: (mode: SentenceMode) => void;
+};
 
 export function ArticleQuizCard({ mode, setMode }: ArticleQuizCardProps) {
   const {
-    sentenceData,
     status,
-    errorMsg,
-    sentenceLength,
-    setSentenceLength,
-    generateSentence,
-    userGuesses,
     score,
+    errorMsg,
+    sentenceData,
+    userGuesses,
+    sentenceLength,
+    generateSentence,
+    setSentenceLength,
     setGuess,
     checkAnswers,
     resetGuesses,
-  } = useGenerateSentence(mode);
+  } = useSentenceStore();
 
   const allFilled =
     userGuesses.length > 0 && userGuesses.every((g) => g !== "");

@@ -1,4 +1,4 @@
-import type { Status } from "../../hooks/use-generate-sentence";
+import type { Status } from "../../store/sentence/types";
 
 type GenerateSentenceButtonProps = {
   status: Status;

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ArticleQuizCard } from "./components/article-quiz-card";
 import { Header } from "./components/layout/header";
 import { useDarkMode } from "./hooks/use-dark-mode";
-import type { SentenceMode } from "./hooks/use-generate-sentence";
+import type { SentenceMode } from "./store/sentence/types";
 
 export function App() {
   const { isDark, toggle } = useDarkMode();
