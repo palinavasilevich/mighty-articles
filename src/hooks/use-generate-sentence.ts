@@ -1,124 +1,88 @@
-import { useState } from "react";
+import { useState, useMemo, useRef, useReducer } from "react";
 import { fetchSentence, type SentenceData } from "../services/groq";
 import { getRandomBookSentence } from "../services/book";
 import type { SentenceLength } from "../constants/sentence-length-options";
 import { isCorrectArticle } from "../utils/isCorrectArticle";
+import { buildMaskedSentence } from "../utils/masking";
 
 export type SentenceMode = "ai" | "book";
-
 export type Status = "idle" | "loading" | "playing" | "checked" | "error";
-
 export type MaskedSentenceData = SentenceData & { maskedSentence: string };
 
-function escapeRegex(str: string): string {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-const DECLENSIONS: Record<string, string[]> = {
-  ein: ["einen", "einem", "einer", "eines"],
-  kein: ["keinen", "keinem", "keiner", "keines"],
-  eine: ["einen", "einem", "einer"],
-  keine: ["keinen", "keinem", "keiner"],
+type State = {
+  status: Status;
+  errorMsg: string;
+  sentenceData: MaskedSentenceData | null;
+  userAnswers: string[];
 };
 
-function findArticleMatch(
-  slice: string,
-  article: string,
-): RegExpExecArray | null {
-  const exact = new RegExp(`\\b${escapeRegex(article)}\\b`, "i");
-  const match = exact.exec(slice);
-  if (match) return match;
+type Action =
+  | { type: "LOADING" }
+  | { type: "LOADED"; sentenceData: MaskedSentenceData }
+  | { type: "ERROR"; msg: string }
+  | { type: "CHECK" }
+  | { type: "SET_GUESS"; index: number; value: string }
+  | { type: "RESET_WRONG"; newGuesses: string[] }
+  | { type: "RESET" };
 
-  for (const alt of DECLENSIONS[article] ?? []) {
-    const altMatch = new RegExp(`\\b${escapeRegex(alt)}\\b`, "i").exec(slice);
-    if (altMatch) return altMatch;
+const initialState: State = {
+  status: "idle",
+  errorMsg: "",
+  sentenceData: null,
+  userAnswers: [],
+};
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case "LOADING":
+      return { ...initialState, status: "loading" };
+    case "LOADED":
+      return {
+        status: "playing",
+        errorMsg: "",
+        sentenceData: action.sentenceData,
+        userAnswers: Array.from(
+          { length: action.sentenceData.articles.length },
+          () => "",
+        ),
+      };
+    case "ERROR":
+      return { ...initialState, status: "error", errorMsg: action.msg };
+    case "CHECK":
+      return { ...state, status: "checked" };
+    case "SET_GUESS":
+      return {
+        ...state,
+        userAnswers: state.userAnswers.map((g, i) =>
+          i === action.index ? action.value : g,
+        ),
+      };
+    case "RESET_WRONG":
+      return { ...state, status: "playing", userAnswers: action.newGuesses };
+    case "RESET":
+      return initialState;
   }
-
-  return null;
 }
 
-function buildMaskedSentence(
-  sentence: string,
-  articles: string[],
-): { maskedSentence: string; sortedArticles: string[] } {
-  const found: { index: number; matchedText: string; article: string }[] = [];
-  const usedRanges: [number, number][] = [];
-
-  for (const article of articles) {
-    let searchFrom = 0;
-    let resolved: { index: number; matchedText: string } | null = null;
-
-    while (searchFrom <= sentence.length) {
-      const match = findArticleMatch(sentence.slice(searchFrom), article);
-      if (!match) break;
-      const start = searchFrom + match.index;
-      const end = start + match[0].length;
-      const overlaps = usedRanges.some(([s, e]) => start < e && end > s);
-      if (!overlaps) {
-        resolved = { index: start, matchedText: match[0] };
-        usedRanges.push([start, end]);
-        break;
-      }
-      searchFrom = start + 1;
-    }
-
-    if (!resolved) {
-      throw new Error(
-        `Masking error: could not find "${article}" in sentence.`,
-      );
-    }
-
-    found.push({ index: resolved.index, matchedText: resolved.matchedText, article });
-  }
-  found.sort((a, b) => a.index - b.index);
-
-  let masked = "";
-  let cursor = 0;
-
-  for (const { index, matchedText } of found) {
-    masked += sentence.slice(cursor, index) + "__ARTICLE__";
-    cursor = index + matchedText.length;
-  }
-
-  return {
-    maskedSentence: masked + sentence.slice(cursor),
-    sortedArticles: found.map((f) => f.matchedText.toLowerCase()),
-  };
-}
-
-export function useGenerateSentence(
-  mode: SentenceMode,
-  setMode: (newMode: SentenceMode) => void,
-) {
-  const [status, setStatus] = useState<Status>("idle");
-  const [errorMsg, setErrorMsg] = useState("");
-  const [sentenceData, setSentenceData] = useState<MaskedSentenceData | null>(
-    null,
-  );
+export function useGenerateSentence(mode: SentenceMode) {
+  const [state, dispatch] = useReducer(reducer, initialState);
   const [sentenceLength, setSentenceLength] =
     useState<SentenceLength>("medium");
-  const [userGuesses, setUserGuesses] = useState<string[]>([]);
+  const abortRef = useRef<AbortController | null>(null);
 
-  const handleSetMode = (newMode: SentenceMode) => {
-    setMode(newMode);
-    setSentenceData(null);
-    setUserGuesses([]);
-    setStatus("idle");
-    setErrorMsg("");
-  };
+  const { status, errorMsg, sentenceData, userAnswers } = state;
 
-  const score =
-    status === "checked" && sentenceData
-      ? userGuesses.filter((g, i) =>
-          isCorrectArticle(g, sentenceData.articles[i]),
-        ).length
-      : null;
+  const score = useMemo(() => {
+    if (status !== "checked" || !sentenceData) return null;
+    return userAnswers.filter((g, i) =>
+      isCorrectArticle(g, sentenceData.articles[i]),
+    ).length;
+  }, [status, sentenceData, userAnswers]);
 
   const generateSentence = async () => {
-    setStatus("loading");
-    setErrorMsg("");
-    setSentenceData(null);
-    setUserGuesses([]);
+    abortRef.current?.abort();
+    abortRef.current = new AbortController();
+    dispatch({ type: "LOADING" });
 
     try {
       const data =
@@ -126,54 +90,55 @@ export function useGenerateSentence(
           ? getRandomBookSentence()
           : await fetchSentence(sentenceLength);
 
+      if (abortRef.current.signal.aborted) return;
+
       const { maskedSentence, sortedArticles } = buildMaskedSentence(
         data.sentence,
         data.articles,
       );
 
-      setSentenceData({
-        ...data,
-        articles: sortedArticles,
-        maskedSentence,
+      dispatch({
+        type: "LOADED",
+        sentenceData: { ...data, articles: sortedArticles, maskedSentence },
       });
-
-      setUserGuesses(Array.from({ length: sortedArticles.length }, () => ""));
-
-      setStatus("playing");
     } catch (error) {
-      setErrorMsg(error instanceof Error ? error.message : "Unknown error");
-      setStatus("error");
+      if (abortRef.current.signal.aborted) return;
+      dispatch({
+        type: "ERROR",
+        msg: error instanceof Error ? error.message : "Unknown error",
+      });
     }
   };
 
-  const setGuess = (index: number, value: string) => {
-    setUserGuesses((prev) => prev.map((g, i) => (i === index ? value : g)));
-  };
+  const setGuess = (index: number, value: string) =>
+    dispatch({ type: "SET_GUESS", index, value });
 
-  const checkAnswers = () => {
-    setStatus("checked");
-  };
+  const checkAnswers = () => dispatch({ type: "CHECK" });
 
   const resetGuesses = () => {
-    setUserGuesses(
-      Array.from({ length: sentenceData!.articles.length }, () => ""),
-    );
-    setStatus("playing");
+    if (!sentenceData) return;
+    dispatch({
+      type: "RESET_WRONG",
+      newGuesses: userAnswers.map((guess, i) =>
+        isCorrectArticle(guess, sentenceData.articles[i]) ? guess : "",
+      ),
+    });
   };
+
+  const reset = () => dispatch({ type: "RESET" });
 
   return {
     status,
     errorMsg,
     sentenceData,
-    mode,
-    setMode: handleSetMode,
     sentenceLength,
     setSentenceLength,
     generateSentence,
-    userGuesses,
+    userGuesses: userAnswers,
     score,
     setGuess,
     checkAnswers,
     resetGuesses,
+    reset,
   };
 }
