@@ -1,4 +1,5 @@
 import type { Status } from "../../store/sentence/types";
+import MagicalButton from "../ui/magical-button";
 
 type GenerateSentenceButtonProps = {
   status: Status;
@@ -35,19 +36,19 @@ export function GenerateSentenceButton({
         Generating...
       </>
     ) : status === "playing" || status === "checked" ? (
-      "Generate new"
+      "Generate new sentence"
     ) : (
-      "Generate"
+      "Generate sentence"
     );
 
   return (
-    <button
+    <MagicalButton
       type="button"
       onClick={onGenerate}
       disabled={status === "loading"}
-      className="flex items-center gap-2 px-5 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 active:bg-blue-800 transition-colors cursor-pointer disabled:bg-blue-500 disabled:cursor-not-allowed"
+      className="flex items-center gap-2 font-cinzel"
     >
       {buttonContent}
-    </button>
+    </MagicalButton>
   );
 }

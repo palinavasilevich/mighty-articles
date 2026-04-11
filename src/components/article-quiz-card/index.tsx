@@ -3,12 +3,12 @@ import {
   type SentenceLength,
 } from "../../constants/sentence-length-options";
 
-import { ResultBoard } from "./result-board";
 import { GenerateSentenceButton } from "./generate-sentence-button";
-import { MaskedSentence } from "../masked-sentence";
 
 import { useSentenceStore } from "../../store/sentence";
-import { MODES } from "../../constants/sentence-modes";
+
+import { SentenceMode } from "../sentence-mode";
+import { QuizCard } from "./quiz-card";
 
 export function ArticleQuizCard() {
   const {
@@ -27,59 +27,33 @@ export function ArticleQuizCard() {
     setMode,
   } = useSentenceStore();
 
-  const allFilled =
-    userGuesses.length > 0 && userGuesses.every((g) => g !== "");
-
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-4 items-center">
-        <div className="flex rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden">
-          {MODES.map(({ value, label }) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => setMode(value)}
-              className={`px-4 py-2 text-sm font-medium transition-colors cursor-pointer ${
-                mode === value
-                  ? "bg-blue-600 text-white"
-                  : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+        <SentenceMode mode={mode} setMode={setMode} />
 
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-lg text-amber-200/80 tracking-wide">
           {mode === "ai"
-            ? "Select the length and click the button to generate a German sentence or question."
+            ? "Select a sentence length and click the button to generate a German sentence or question."
             : "Click the button to get a random sentence from Harry Potter."}
         </p>
 
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center justify-between gap-4">
           {mode === "ai" && (
-            <>
-              <label
-                htmlFor="length"
-                className="text-sm font-medium text-gray-700 dark:text-gray-300"
-              >
-                Sentence Length:
-              </label>
-              <select
-                id="length"
-                value={sentenceLength}
-                onChange={(e) =>
-                  setSentenceLength(e.target.value as SentenceLength)
-                }
-                className="text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-200"
-              >
-                {LENGTH_OPTIONS.map(({ value, label }) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </>
+            <select
+              id="length"
+              value={sentenceLength}
+              onChange={(e) =>
+                setSentenceLength(e.target.value as SentenceLength)
+              }
+              className="text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-200"
+            >
+              {LENGTH_OPTIONS.map(({ value, label }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
           )}
 
           <GenerateSentenceButton
@@ -95,36 +69,16 @@ export function ArticleQuizCard() {
         )}
       </div>
       {sentenceData && (
-        <div className="mt-4 bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 p-6 space-y-4">
-          <div className="flex flex-col gap-4 items-center">
-            <MaskedSentence
-              sentenceData={sentenceData}
-              status={status}
-              userGuesses={userGuesses}
-              onGuessChange={setGuess}
-            />
-
-            {status === "playing" && (
-              <button
-                type="button"
-                onClick={checkAnswers}
-                disabled={!allFilled}
-                className="px-5 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 active:bg-green-800 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                Check answers
-              </button>
-            )}
-
-            {status === "checked" && score !== null && (
-              <ResultBoard
-                score={score}
-                total={userGuesses.length}
-                onReset={resetGuesses}
-              />
-            )}
-          </div>
-        </div>
+        <QuizCard
+          sentenceData={sentenceData}
+          status={status}
+          score={score}
+          userGuesses={userGuesses}
+          setGuess={setGuess}
+          checkAnswers={checkAnswers}
+          resetGuesses={resetGuesses}
+        />
       )}
-    </>
+    </div>
   );
 }

@@ -24,9 +24,8 @@ export const ArticleInput = ({
       value={value}
       placeholder={placeholder}
       className={`
-      inline-block mb-2 mx-1 w-20 border-b-2 border-blue-500 
-      bg-blue-50 dark:bg-blue-900/30 rounded px-1 py-0.5 text-blue-800 
-      dark:text-blue-300 font-medium focus:outline-none focus:border-blue-700`}
+        magical-input inline-block mb-2 mx-1 w-20 px-1 py-0.5 
+        rounded-lg text-amber-900 font-lora font-medium`}
       onChange={(e) => onChange(e.target.value)}
       onKeyDown={handleKeyDown}
     />

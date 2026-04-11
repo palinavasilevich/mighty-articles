@@ -1,2 +1,81 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Lora:ital,wght@0,400..700;1,400..700&display=swap");
+
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #0f172a;
+  --foreground: #fffbeb;
+
+  --font-cinzel: "Cinzel", sans-serif;
+  --font-lora: "Lora", sans-serif;
+
+  --color-gold: #d4a017;
+  --color-gold-light: #f5d060;
+  --color-gold-dark: #996515;
+  --color-parchment: #f5e6c8;
+  --color-parchment-dark: #d4b896;
+  --color-magic-purple: #7c3aed;
+  --color-magic-blue: #3b82f6;
+  --color-hogwarts-green: #065f46;
+  --color-gryffindor: #740001;
+  --color-slytherin: #1a472a;
+  --color-ravenclaw: #0e1a40;
+  --color-hufflepuff: #ecb939;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-cinzel: var(--font-cinzel);
+  --font-body: var(--font-lora);
+  --color-gold: var(--color-gold);
+  --color-gold-light: var(--color-gold-light);
+  --color-gold-dark: var(--color-gold-dark);
+  --color-parchment: var(--color-parchment);
+  --color-parchment-dark: var(--color-parchment-dark);
+  --color-magic-purple: var(--color-magic-purple);
+  --color-magic-blue: var(--color-magic-blue);
+}
+
+body {
+  overflow-x: hidden;
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+  color: var(--foreground);
+  font-family: var(--font-body), Georgia, serif;
+  min-height: 100vh;
+}
+
+.text-glow-gold {
+  text-shadow:
+    0 0 10px rgba(212, 160, 23, 0.5),
+    0 0 20px rgba(212, 160, 23, 0.3),
+    0 0 40px rgba(212, 160, 23, 0.15);
+}
+
+.text-glow-gold-strong {
+  text-shadow:
+    0 0 10px rgba(245, 208, 96, 0.6),
+    0 0 20px rgba(245, 208, 96, 0.4),
+    0 0 40px rgba(245, 208, 96, 0.2),
+    0 0 60px rgba(212, 160, 23, 0.1);
+}
+
+/* Magical input styling */
+.magical-input {
+  background: linear-gradient(
+    135deg,
+    rgba(245, 230, 200, 0.1),
+    rgba(245, 230, 200, 0.05)
+  );
+  border: 2px solid rgba(212, 160, 23, 0.3);
+  transition: all 0.3s ease;
+}
+
+.magical-input:focus {
+  border-color: rgba(212, 160, 23, 0.7);
+  box-shadow:
+    0 0 15px rgba(212, 160, 23, 0.2),
+    0 0 30px rgba(212, 160, 23, 0.1);
+  outline: none;
+}

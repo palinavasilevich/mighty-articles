@@ -39,7 +39,7 @@ export function MaskedSentence({
   );
 
   return (
-    <p className="text-lg leading-loose dark:text-gray-100">
+    <p className="text-xl font-bold text-amber-950 leading-relaxed">
       {parts.map((part, i) => (
         <React.Fragment key={i}>
           {part}
