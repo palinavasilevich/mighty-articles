@@ -29,50 +29,59 @@ export function ArticleQuizCard() {
   } = useSentenceStore();
 
   return (
-    <div className="flex flex-col gap-4">
+    <div>
       <div className="flex flex-col gap-4 items-center">
         <SentenceMode mode={mode} setMode={setMode} />
 
-        <p className="text-lg text-amber-200/80 tracking-wide">
-          {mode === "ai"
-            ? "Select a sentence length and click the button to generate a German sentence or question."
-            : "Click the button to get a random sentence from Harry Potter."}
-        </p>
+        <div
+          className={`
+          max-w-2xl w-full m-auto
+          flex flex-col gap-4 items-center
+         bg-white/80 border-amber-200 hover:border-yellow-400 
+          rounded-2xl p-4 md:p-6 shadow-md
+          `}
+        >
+          <p className="text-lg text-amber-600 tracking-wide text-center">
+            {mode === "ai"
+              ? "Select a sentence length and click the button to generate a German sentence or question."
+              : "Click the button to get a random sentence from Harry Potter."}
+          </p>
 
-        <div className="flex items-center justify-between gap-4">
-          {mode === "ai" && (
-            <Select
-              value={sentenceLength}
-              onChange={(e) =>
-                setSentenceLength(e.target.value as SentenceLength)
-              }
-              options={LENGTH_OPTIONS}
+          <div className="flex items-center justify-between gap-4">
+            {mode === "ai" && (
+              <Select
+                value={sentenceLength}
+                onChange={(e) =>
+                  setSentenceLength(e.target.value as SentenceLength)
+                }
+                options={LENGTH_OPTIONS}
+              />
+            )}
+
+            <GenerateSentenceButton
+              status={status}
+              onGenerate={generateSentence}
             />
+          </div>
+          {status === "error" && (
+            <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+              {errorMsg}
+            </p>
           )}
 
-          <GenerateSentenceButton
-            status={status}
-            onGenerate={generateSentence}
-          />
+          {sentenceData && (
+            <QuizCard
+              sentenceData={sentenceData}
+              status={status}
+              score={score}
+              userGuesses={userGuesses}
+              setGuess={setGuess}
+              checkAnswers={checkAnswers}
+              resetGuesses={resetGuesses}
+            />
+          )}
         </div>
-
-        {status === "error" && (
-          <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
-            {errorMsg}
-          </p>
-        )}
       </div>
-      {sentenceData && (
-        <QuizCard
-          sentenceData={sentenceData}
-          status={status}
-          score={score}
-          userGuesses={userGuesses}
-          setGuess={setGuess}
-          checkAnswers={checkAnswers}
-          resetGuesses={resetGuesses}
-        />
-      )}
     </div>
   );
 }

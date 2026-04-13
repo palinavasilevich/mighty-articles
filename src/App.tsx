@@ -15,8 +15,8 @@ export function App() {
     >
       <Header isDark={isDark} onToggle={toggle} isBookMode={mode === "book"} />
       <MagicalBackground>
-        <main className="w-full max-w-5xl mx-auto px-4 pt-20">
-          <h1 className="mb-8 text-center text-5xl font-bold text-glow-gold-strong font-cinzel text-transparent bg-clip-text bg-linear-to-br from-[#f5d060] via-[#d4a017] to-[#f5d060]">
+        <main className="w-full max-w-4xl mx-auto px-4 pt-16">
+          <h1 className="mb-8 text-center text-4xl font-bold font-cinzel text-transparent bg-clip-text bg-linear-to-br from-[#f5d060] via-[#d4a017] to-[#f5d060]">
             Learn German articles and become a master of sword, magic, and the
             German language!
           </h1>

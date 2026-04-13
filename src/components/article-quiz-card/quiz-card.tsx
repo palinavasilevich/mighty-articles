@@ -40,15 +40,7 @@ export function QuizCard({
   };
 
   return (
-    <div
-      className={`
-        max-w-2xl w-full m-auto
-        flex flex-col gap-4 items-center
-        bg-linear-to-br from-amber-50 via-orange-50 to-yellow-50
-        border border-amber-200/60
-        rounded-2xl p-4 md:p-6 shadow-md
-      `}
-    >
+    <div className={`mt-5 flex flex-col gap-4 items-center`}>
       <MaskedSentence
         sentenceData={sentenceData}
         status={status}
