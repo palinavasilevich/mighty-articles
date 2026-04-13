@@ -1,5 +1,4 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState, useCallback } from "react";
 
 interface Sparkle {
   id: number;
@@ -8,6 +7,15 @@ interface Sparkle {
   size: number;
   delay: number;
 }
+
+const MAX_SPARKLES = 32;
+const SPARKLE_POOL: Sparkle[] = Array.from({ length: MAX_SPARKLES }, (_, i) => ({
+  id: i,
+  x: Math.random() * 100,
+  y: Math.random() * 100,
+  size: Math.random() * 8 + 4,
+  delay: Math.random() * 0.6,
+}));
 
 interface SparkleEffectProps {
   trigger?: boolean;
@@ -20,27 +28,7 @@ export default function SparkleEffect({
   count = 12,
   className = "",
 }: SparkleEffectProps) {
-  const [sparkles, setSparkles] = useState<Sparkle[]>([]);
-
-  const generateSparkles = useCallback(() => {
-    return Array.from({ length: count }, (_, i) => ({
-      id: Date.now() + i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 8 + 4,
-      delay: Math.random() * 0.6,
-    }));
-  }, [count]);
-
-  //   useEffect(() => {
-  //     if (trigger) {
-  //       setSparkles(generateSparkles());
-  //       const timer = setTimeout(() => setSparkles([]), 2000);
-  //       return () => clearTimeout(timer);
-  //     } else {
-  //       setSparkles([]);
-  //     }
-  //   }, [trigger, generateSparkles]);
+  const sparkles = trigger ? SPARKLE_POOL.slice(0, count) : [];
 
   return (
     <div

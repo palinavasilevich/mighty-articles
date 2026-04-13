@@ -53,13 +53,12 @@ export function QuizCard({
         </MagicalButton>
       )}
 
-      {status === "checked" && score !== null && (
-        <Results
-          score={score}
-          total={userGuesses.length}
-          onReset={resetGuesses}
-        />
-      )}
+      <Results
+        open={status === "checked" && score !== null}
+        score={score ?? 0}
+        total={userGuesses.length}
+        onReset={resetGuesses}
+      />
     </div>
   );
 }

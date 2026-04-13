@@ -1,16 +1,13 @@
-import SunIcon from "/icons/sun.svg";
-import MoonIcon from "/icons/moon.svg";
-
 import HarryPotterIcon from "/icons/harry-potter.svg";
 import SnitchIcon from "/icons/icons8-snitch-50.png";
 
 type HeaderProps = {
-  isDark: boolean;
-  onToggle: () => void;
+  isDark?: boolean;
+  onToggle?: () => void;
   isBookMode: boolean;
 };
 
-export function Header({ isDark, onToggle, isBookMode }: HeaderProps) {
+export function Header({ isBookMode }: HeaderProps) {
   return (
     <header
       className={`
