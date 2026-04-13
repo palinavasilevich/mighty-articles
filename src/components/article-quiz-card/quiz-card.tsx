@@ -51,7 +51,7 @@ export function QuizCard({
 
       {status === "playing" && (
         <MagicalButton
-          variant="success"
+          variant="secondary"
           onClick={handleCheck}
           disabled={!allFilled}
           className="transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
@@ -69,9 +69,7 @@ export function QuizCard({
       />
 
       {status === "checked" && (
-        <MagicalButton variant="retry" onClick={handleReset}>
-          Try again
-        </MagicalButton>
+        <MagicalButton onClick={handleReset}>Try again</MagicalButton>
       )}
     </div>
   );

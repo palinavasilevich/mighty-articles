@@ -30,18 +30,19 @@ export function ArticleQuizCard() {
 
   return (
     <div>
-      <div className="flex flex-col gap-4 items-center">
+      <div className="flex flex-col gap-6 items-center">
         <SentenceMode mode={mode} setMode={setMode} />
 
         <div
           className={`
           max-w-2xl w-full m-auto
           flex flex-col gap-4 items-center
-         bg-white/80 border-amber-200 hover:border-yellow-400 
+          bg-linear-to-b from-indigo-900 via-purple-900 to-indigo-900
+         border-amber-200 
           rounded-2xl p-4 md:p-6 shadow-md
           `}
         >
-          <p className="text-lg text-amber-600 tracking-wide text-center">
+          <p className="text-xl font-semibold font-cinzel text-gold tracking-wide text-center">
             {mode === "ai"
               ? "Select a sentence length and click the button to generate a German sentence or question."
               : "Click the button to get a random sentence from Harry Potter."}
