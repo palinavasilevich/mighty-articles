@@ -1,6 +1,7 @@
 import { ArticleQuizCard } from "./components/article-quiz-card";
 import { MagicalBackground } from "./components/layout/background/magical-background";
 import { Header } from "./components/layout/header";
+
 import { useDarkMode } from "./hooks/use-dark-mode";
 import { useSentenceStore } from "./store/sentence";
 

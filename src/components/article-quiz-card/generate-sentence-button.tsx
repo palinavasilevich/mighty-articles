@@ -43,7 +43,7 @@ export function GenerateSentenceButton({
 
   return (
     <MagicalButton
-      type="button"
+      variant="accent"
       onClick={onGenerate}
       disabled={status === "loading"}
       className="flex items-center gap-2 font-cinzel"

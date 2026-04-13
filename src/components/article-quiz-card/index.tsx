@@ -9,6 +9,7 @@ import { useSentenceStore } from "../../store/sentence";
 
 import { SentenceMode } from "../sentence-mode";
 import { QuizCard } from "./quiz-card";
+import { Select } from "../ui/select";
 
 export function ArticleQuizCard() {
   const {
@@ -40,20 +41,13 @@ export function ArticleQuizCard() {
 
         <div className="flex items-center justify-between gap-4">
           {mode === "ai" && (
-            <select
-              id="length"
+            <Select
               value={sentenceLength}
               onChange={(e) =>
                 setSentenceLength(e.target.value as SentenceLength)
               }
-              className="text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-200"
-            >
-              {LENGTH_OPTIONS.map(({ value, label }) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
+              options={LENGTH_OPTIONS}
+            />
           )}
 
           <GenerateSentenceButton

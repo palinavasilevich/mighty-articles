@@ -10,31 +10,6 @@ type ResultsProps = {
 
 export function Results({ score, total, onReset }: ResultsProps) {
   return (
-    // <div className="flex flex-col items-center gap-3">
-    //   {score === total ? (
-    //     <div className="text-2xl font-bold flex flex-col items-center gap-1">
-    //       <span className="text-green-600">🎉 Gut gemacht!</span>
-    //       <span className="text-green-600">
-    //         {score} / {total}
-    //       </span>
-    //     </div>
-    //   ) : (
-    //     <p className="text-lg font-semibold text-gray-700 dark:text-gray-300 text-center">
-    //       Score:{" "}
-    //       <span className="text-orange-500">
-    //         {score} / {total}
-    //       </span>
-    //     </p>
-    //   )}
-    //   <button
-    //     type="button"
-    //     onClick={onReset}
-    //     className="px-5 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 active:bg-gray-300 dark:active:bg-gray-500 transition-colors cursor-pointer"
-    //   >
-    //     Try again
-    //   </button>
-    // </div>
-
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
@@ -67,7 +42,7 @@ export function Results({ score, total, onReset }: ResultsProps) {
             </motion.p>
           )}
 
-          <MagicalButton type="button" variant="danger" onClick={onReset}>
+          <MagicalButton variant="outline" onClick={onReset}>
             Try again
           </MagicalButton>
         </div>

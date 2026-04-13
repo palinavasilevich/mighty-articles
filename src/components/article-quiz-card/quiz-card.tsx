@@ -44,7 +44,6 @@ export function QuizCard({
 
       {status === "playing" && (
         <MagicalButton
-          type="button"
           variant="success"
           onClick={checkAnswers}
           disabled={!allFilled}
