@@ -16,7 +16,7 @@ export function SentenceMode({ mode, setMode }: SentenceModeProps) {
           key={value}
           onClick={() => setMode(value)}
           variant={mode === value ? "primary" : "secondary"}
-          className="mr-3 font-cinzel transition-colors"
+          className="mr-3 transition-colors"
         >
           {label}
         </MagicalButton>

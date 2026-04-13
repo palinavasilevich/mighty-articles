@@ -2,10 +2,13 @@ import { motion, AnimatePresence, type Variants } from "framer-motion";
 import SparkleEffect from "./sparkle-effect";
 import MagicalButton from "../ui/magical-button";
 
+import { X as CloseIcon, Star as StarIcon } from "lucide-react";
+
 type ResultsProps = {
   open: boolean;
   score: number;
   total: number;
+  onClose: () => void;
   onReset: () => void;
 };
 
@@ -84,7 +87,13 @@ const childVariants: Variants = {
   },
 };
 
-export function Results({ open, score, total, onReset }: ResultsProps) {
+export function Results({
+  open,
+  score,
+  total,
+  onClose,
+  onReset,
+}: ResultsProps) {
   const level = getLevel(score, total);
   const pct = score / total;
   const dashOffset = CIRCUMFERENCE * (1 - pct);
@@ -100,13 +109,12 @@ export function Results({ open, score, total, onReset }: ResultsProps) {
           animate="visible"
           exit="hidden"
           transition={{ duration: 0.25 }}
-          onClick={onReset}
+          onClick={onClose}
           style={{
             background: "rgba(5,4,20,0.75)",
             backdropFilter: "blur(6px)",
           }}
         >
-          {/* Card — stop propagation so clicking inside doesn't close */}
           <motion.div
             key="card"
             onClick={(e) => e.stopPropagation()}
@@ -118,7 +126,6 @@ export function Results({ open, score, total, onReset }: ResultsProps) {
               bg-linear-to-b from-indigo-950 via-purple-950 to-indigo-950
               border border-yellow-600/30 shadow-2xl shadow-black/60"
           >
-            {/* ambient glow */}
             <motion.div
               className="pointer-events-none absolute inset-0 rounded-2xl"
               animate={{ opacity: [0.4, 0.7, 0.4] }}
@@ -132,9 +139,16 @@ export function Results({ open, score, total, onReset }: ResultsProps) {
               }}
             />
 
+            <button
+              onClick={onClose}
+              className="absolute top-3 right-3 z-10 flex items-center justify-center w-7 h-7 rounded-full text-white/40 hover:text-white/80 hover:bg-white/10 cursor-pointer transition-colors"
+              aria-label="Close"
+            >
+              <CloseIcon />
+            </button>
+
             <SparkleEffect trigger={pct >= 0.7} count={18} />
 
-            {/* Score ring */}
             <motion.div variants={childVariants} className="relative w-36 h-36">
               <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
                 <circle
@@ -180,7 +194,6 @@ export function Results({ open, score, total, onReset }: ResultsProps) {
               </div>
             </motion.div>
 
-            {/* Level label + message */}
             <motion.div
               variants={childVariants}
               className="flex flex-col items-center gap-1"
@@ -195,7 +208,6 @@ export function Results({ open, score, total, onReset }: ResultsProps) {
               </span>
             </motion.div>
 
-            {/* Stars */}
             <motion.div
               variants={childVariants}
               className="flex gap-2 flex-wrap justify-center"
@@ -210,22 +222,20 @@ export function Results({ open, score, total, onReset }: ResultsProps) {
                     type: "spring",
                     stiffness: 260,
                   }}
-                  className={`text-xl ${
-                    i < score
-                      ? "text-yellow-400 drop-shadow-[0_0_6px_rgba(250,204,21,0.8)]"
-                      : "text-white/15"
-                  }`}
                 >
-                  ★
+                  <StarIcon
+                    className={`${
+                      i < score
+                        ? "text-yellow-500 fill-yellow-500 drop-shadow-[0_0_6px_rgba(250,204,21,0.8)]"
+                        : "text-white/15 fill-white/55"
+                    }`}
+                  />
                 </motion.span>
               ))}
             </motion.div>
 
-            {/* Button */}
             <motion.div variants={childVariants}>
-              <MagicalButton variant="primary" size="lg" onClick={onReset}>
-                Try again
-              </MagicalButton>
+              <MagicalButton onClick={onReset}>Try again</MagicalButton>
             </motion.div>
           </motion.div>
         </motion.div>

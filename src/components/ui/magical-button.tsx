@@ -6,7 +6,7 @@ type ButtonVariant =
   | "accent"
   | "danger"
   | "success"
-  | "outline";
+  | "retry";
 type ButtonSize = "sm" | "md" | "lg";
 
 type MagicalButtonProps = {
@@ -30,8 +30,8 @@ const variantClasses: Record<ButtonVariant, string> = {
     "bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white shadow-lg shadow-red-500/25 hover:shadow-red-500/40",
   success:
     "bg-gradient-to-r from-emerald-700 via-emerald-600 to-emerald-500 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-400/40",
-  outline:
-    "border border-amber-700 text-amber-950 hover:bg-amber-700 hover:text-white",
+  retry:
+    "bg-gradient-to-r from-cyan-700 via-sky-600 to-blue-500 text-white shadow-lg shadow-sky-500/25 hover:shadow-sky-400/40",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -57,6 +57,7 @@ export default function MagicalButton({
       className={`
         inline-flex items-center justify-center font-bold tracking-wide
         transition-all duration-200 cursor-pointer select-none
+        font-cinzel
         ${variantClasses[variant]}
         ${sizeClasses[size]}
         ${disabled ? "opacity-50 cursor-not-allowed saturate-50" : ""}

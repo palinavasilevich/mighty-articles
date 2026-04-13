@@ -46,7 +46,7 @@ export function GenerateSentenceButton({
       variant="accent"
       onClick={onGenerate}
       disabled={status === "loading"}
-      className="flex items-center gap-2 font-cinzel"
+      className="flex items-center gap-2"
     >
       {buttonContent}
     </MagicalButton>

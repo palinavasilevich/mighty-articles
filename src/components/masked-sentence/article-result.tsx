@@ -10,9 +10,9 @@ export const ArticleResult = ({
   const correct = isCorrectArticle(value, correctValue);
   return (
     <span
-      className={`mx-1 px-1.5 py-0.5 rounded font-semibold ${
+      className={`mx-1 px-2 py-1.5 rounded font-semibold ${
         correct
-          ? "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400"
+          ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400"
           : "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400"
       }`}
     >

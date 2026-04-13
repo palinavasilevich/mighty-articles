@@ -1,4 +1,4 @@
-import { ArticleQuizCard } from "./components/article-quiz-card";
+import { ArticleQuizCard } from "./components/article-quiz-card/article-quiz-card";
 import { MagicalBackground } from "./components/layout/background/magical-background";
 import { Header } from "./components/layout/header";
 
