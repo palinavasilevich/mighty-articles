@@ -2,23 +2,35 @@ import rawText from "../data/harry-potter.txt?raw";
 import type { SentenceData } from "./groq";
 
 const GERMAN_ARTICLES = [
-  "der", "die", "das", "den", "dem", "des",
-  "ein", "eine", "einen", "einem", "einer", "eines",
-  "kein", "keine", "keinen", "keinem", "keiner", "keines",
+  "der",
+  "die",
+  "das",
+  "den",
+  "dem",
+  "des",
+  "ein",
+  "eine",
+  "einen",
+  "einem",
+  "einer",
+  "eines",
+  "kein",
+  "keine",
+  "keinen",
+  "keinem",
+  "keiner",
+  "keines",
 ];
 
-const ARTICLE_REGEX = new RegExp(
-  `\\b(${GERMAN_ARTICLES.join("|")})\\b`,
-  "gi",
-);
+const ARTICLE_REGEX = new RegExp(`\\b(${GERMAN_ARTICLES.join("|")})\\b`, "gi");
 
 function splitIntoSentences(text: string): string[] {
   return text
     .replace(/\r\n/g, "\n")
-    .replace(/^#[^\n]*\n/gm, "") // strip comment lines
-    .split(/(?<=[.!?])\s+/)
+    .replace(/^#[^\n]*\n/gm, "")
+    .split(/(?<=\.{3}|…|[!?]|(?<!\.)\.(?!\.))\s+/)
     .map((s) => s.trim())
-    .filter((s) => s.length >= 20 && /[.!?]$/.test(s));
+    .filter((s) => s.length >= 20 && /([.!?]|\.{3}|…)$/.test(s));
 }
 
 function extractArticles(sentence: string): string[] {

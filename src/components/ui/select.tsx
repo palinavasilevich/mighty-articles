@@ -6,8 +6,8 @@ export function Select({ options, className, ...props }: SelectProps) {
   return (
     <select
       className={`
-        py-3 px-6 border border-amber-700 rounded-xl
-        font-cinzel text-amber-100 font-semibold
+        py-2.5 px-6 border border-amber-700 rounded-xl
+        font-cinzel text-amber-950 dark:text-amber-100 font-semibold
         focus:ring-2 focus:ring-amber-500 focus:outline-none
         cursor-pointer
         ${className ?? ""}
@@ -18,7 +18,7 @@ export function Select({ options, className, ...props }: SelectProps) {
         <option
           key={opt.value}
           value={opt.value}
-          className="text-amber-950 font-semibold bg-slate-200"
+          className="text-amber-950 font-semibold bg-amber-50"
         >
           {opt.label}
         </option>

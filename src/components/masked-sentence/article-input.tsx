@@ -24,8 +24,8 @@ export const ArticleInput = ({
       value={value}
       placeholder={placeholder}
       className={`
-        magical-input inline-block mb-2 mx-1 w-20 px-1 py-0.5
-        rounded-lg text-amber-200 font-lora font-medium`}
+        magical-input inline-block mb-2 w-20 px-1 py-0.5
+        rounded-lg text-amber-950 dark:text-amber-200 font-lora font-medium`}
       onChange={(e) => onChange(e.target.value)}
       onKeyDown={handleKeyDown}
     />

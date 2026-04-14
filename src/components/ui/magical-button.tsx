@@ -36,7 +36,7 @@ const variantClasses: Record<ButtonVariant, string> = {
 
 const sizeClasses: Record<ButtonSize, string> = {
   sm: "px-4 py-2 text-sm min-h-[40px] rounded-lg",
-  md: "px-6 py-3 text-base min-h-[48px] rounded-xl",
+  md: "px-6 py-3 text-sm sm:text-base min-h-[48px] rounded-xl",
   lg: "px-8 py-4 text-lg min-h-[56px] rounded-xl",
 };
 

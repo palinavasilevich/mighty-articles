@@ -39,13 +39,12 @@ export function MagicalBackground({
       <div
         className={`
           fixed inset-0 -z-10 overflow-hidden pointer-events-none
-          bg-linear-to-b from-indigo-950 via-purple-950 to-slate-950
+          bg-linear-to-br from-amber-50 via-orange-50 to-yellow-50
+          dark:bg-linear-to-b dark:from-indigo-950 dark:via-purple-950 dark:to-slate-950
+
           ${className}
         `}
       >
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-150 h-100 bg-purple-800/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-100 h-75 bg-indigo-800/10 rounded-full blur-3xl" />
-
         {stars.map((star) => (
           <div
             key={star.id}

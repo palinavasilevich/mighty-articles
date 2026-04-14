@@ -10,13 +10,13 @@ type SentenceModeProps = {
 
 export function SentenceMode({ mode, setMode }: SentenceModeProps) {
   return (
-    <div>
+    <div className="flex flex-col sm:flex-row gap-3">
       {MODES.map(({ value, label }) => (
         <MagicalButton
           key={value}
           onClick={() => setMode(value)}
           variant={mode === value ? "primary" : "secondary"}
-          className="mr-3 transition-colors"
+          className="transition-colors"
         >
           {label}
         </MagicalButton>

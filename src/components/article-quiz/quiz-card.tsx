@@ -1,8 +1,8 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import type { Status, MaskedSentenceData } from "../../store/sentence/types";
 import { MaskedSentence } from "../masked-sentence/masked-sentence";
 import MagicalButton from "../ui/magical-button";
-import { Results } from "../results/results";
+import { Results } from "../results";
 
 type QuizCardProps = {
   status: Status;
@@ -23,21 +23,9 @@ export function QuizCard({
   checkAnswers,
   resetGuesses,
 }: QuizCardProps) {
-  const [modalOpen, setModalOpen] = useState(false);
-
   const allFilled = useMemo(() => {
     return userGuesses.length > 0 && userGuesses.every((g) => g !== "");
   }, [userGuesses]);
-
-  const handleCheck = () => {
-    checkAnswers();
-    setModalOpen(true);
-  };
-
-  const handleReset = () => {
-    resetGuesses();
-    setModalOpen(false);
-  };
 
   return (
     <div className={`mt-5 flex flex-col gap-4 items-center`}>
@@ -46,13 +34,13 @@ export function QuizCard({
         status={status}
         userGuesses={userGuesses}
         onGuessChange={setGuess}
-        checkAnswers={handleCheck}
+        checkAnswers={checkAnswers}
       />
 
       {status === "playing" && (
         <MagicalButton
           variant="secondary"
-          onClick={handleCheck}
+          onClick={checkAnswers}
           disabled={!allFilled}
           className="transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
         >
@@ -60,16 +48,12 @@ export function QuizCard({
         </MagicalButton>
       )}
 
-      <Results
-        open={modalOpen}
-        score={score ?? 0}
-        total={userGuesses.length}
-        onClose={() => setModalOpen(false)}
-        onReset={handleReset}
-      />
-
       {status === "checked" && (
-        <MagicalButton onClick={handleReset}>Try again</MagicalButton>
+        <Results
+          score={score ?? 0}
+          total={userGuesses.length}
+          onReset={resetGuesses}
+        />
       )}
     </div>
   );
