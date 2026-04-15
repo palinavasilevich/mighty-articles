@@ -48,8 +48,18 @@ export function Results({ score, total, onReset }: ResultsProps) {
   const level = getLevel(score, total);
 
   return (
-    <motion.div className="mt-2 flex flex-col items-center gap-4">
-      <motion.div className="flex flex-col items-center gap-1">
+    <motion.div
+      className="mt-2 flex flex-col items-center gap-5"
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+    >
+      <motion.div
+        className="flex flex-col items-center gap-1"
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: "easeOut", delay: 0.35 }}
+      >
         <span
           className={`text-xl sm:text-2xl font-bold tracking-wide ${level.color}`}
         >
@@ -60,7 +70,11 @@ export function Results({ score, total, onReset }: ResultsProps) {
         </span>
       </motion.div>
 
-      <motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: "easeOut", delay: 0.5 }}
+      >
         <MagicalButton onClick={onReset}>Try again</MagicalButton>
       </motion.div>
     </motion.div>
